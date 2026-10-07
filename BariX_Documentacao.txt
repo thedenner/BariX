@@ -1,0 +1,69 @@
+ENTITY
+Category
+│
+│ "Como uma categoria é representada no Java?"
+│
+└── mapeia a tabela categoria
+REPOSITORY
+CategoryRepository
+│
+│ "Como acesso/persisto categorias?"
+│
+└── findAll()
+    findById()
+    save()
+    deleteById()
+    existsById()
+SERVICE
+CategoryService
+│
+│ "O que o sistema pode fazer com categorias?"
+│
+├── listarTodas()
+├── buscarPorId()
+├── salvar()
+├── atualizar()
+└── excluir()
+CONTROLLER
+CategoryController
+│
+│ "Como alguém de fora pede essas operações?"
+│
+├── GET
+├── POST
+├── PUT
+└── DELETE
+
+
+REQUISIÇÃO HTTP
+       ↓
+   CONTROLLER
+"o que foi pedido?"
+       ↓
+    SERVICE
+"o que devemos fazer?"
+       ↓
+  REPOSITORY
+"como acessar os dados?"
+       ↓
+     ENTITY
+"qual estrutura representa esses dados?"
+       ↓
+JPA / HIBERNATE
+       ↓
+     MYSQL
+
+
+     Controller: recebe requisições HTTP e devolve respostas.
+
+     Service: concentra as operações e regras da aplicação.
+
+     Repository: realiza o acesso e a persistência dos dados.
+
+     Entity: representa no Java os dados persistidos no banco.
+
+     E uma frase que resume tudo:
+
+     O Controller pergunta ao Service o que fazer;
+     o Service usa o Repository para acessar os dados;
+     o Repository trabalha com as Entities que representam o banco.
