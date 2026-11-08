@@ -25,12 +25,11 @@ public class CategoryService {
     }
 
 //    O Service diz:
-//
 //    encontrei ou não encontrei uma categoria.
 //
 //    O Controller decide:
-//
 //    qual resposta HTTP devo devolver?
+
     public Optional<Category> buscarPorId(Integer id) {
         return categoryRepository.findById(id);
     }

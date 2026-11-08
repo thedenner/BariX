@@ -14,6 +14,7 @@ public class DashboardViewController {
     private final ItemService itemService;
 
     public DashboardViewController(ItemService itemService) {
+
         this.itemService = itemService;
     }
 

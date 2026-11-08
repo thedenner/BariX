@@ -1,0 +1,986 @@
+@charset "UTF-8";
+
+/* =====================================================
+   BARIX - Gestão de Bar
+   Arquivo de estilos (CSS) do projeto
+
+   Organização do arquivo:
+   1. Cores do projeto (variáveis)
+   2. Configurações gerais
+   3. Botões (usados em várias telas)
+   4. Tela de Login e Criar Conta
+   5. Menu lateral e estrutura das telas do sistema
+   6. Tela Inicial
+   7. Tabelas (Comandas e Estoque)
+   8. Tela de Estoque
+   9. Tela Nova Comanda / Comanda criada
+   10. Telas menores (celular)
+   ===================================================== */
+
+
+/* =====================================================
+   1. CORES DO PROJETO
+   Para mudar uma cor no site inteiro, altere só aqui.
+   ===================================================== */
+:root {
+    --verde-escuro: #123B2A;   /* menu lateral e botões escuros */
+    --verde: #176B49;          /* item ativo do menu e botão Sair */
+    --verde-claro: #E3F0E8;    /* fundos suaves de verde */
+    --preto-painel: #1F1D1D;   /* painel escuro do login */
+    --cinza: #D9D9D9;          /* fundo das telas */
+    --laranja: #F2A93B;        /* botões laranja e alertas */
+    --laranja-claro: #FFF7E8;  /* fundo do card de alerta */
+    --vermelho: #D94A4A;
+    --branco: #FFFFFF;
+    --texto: #202520;
+    --texto-suave: #626B65;
+    --borda: #BFC8C1;
+}
+
+
+/* =====================================================
+   2. CONFIGURAÇÕES GERAIS
+   ===================================================== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    color: var(--texto);
+}
+
+
+/* =====================================================
+   3. BOTÕES (reaproveitados em várias telas)
+   ===================================================== */
+
+/* Botão verde escuro: "+ Nova comanda", "Criar comanda", "Fechar comanda" */
+.btn-verde,
+.btn-nova-comanda {
+    display: inline-block;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--verde-escuro);
+    color: var(--branco);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-verde:hover,
+.btn-nova-comanda:hover {
+    background-color: var(--verde);
+}
+
+/* Na tela de Comandas o botão fica no topo, ao lado do Funcionário */
+.btn-nova-comanda {
+    position: absolute;
+    top: 30px;
+    right: 190px;
+}
+
+/* Botão Sair (o tamanho e a cor mudam em cada tela, veja abaixo) */
+.btn-sair {
+    display: inline-block;
+    padding: 8px 22px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+}
+
+
+/* =====================================================
+   4. TELA DE LOGIN E CRIAR CONTA
+   ===================================================== */
+
+/* Fundo verde com a faixa diagonal mais escura */
+.pagina-login {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(340deg, #0B2118 45%, var(--verde-escuro) 45%);
+}
+
+/* Barra de links provisória (não existe no Figma, mantida para navegar entre as telas) */
+.pagina-login nav {
+    padding: 10px 20px;
+    font-size: 12px;
+}
+
+.pagina-login nav a {
+    margin-right: 14px;
+    color: #9FB8AA;
+    text-decoration: none;
+}
+
+.pagina-login nav a:hover {
+    color: var(--branco);
+}
+
+/* Quadro que segura os dois painéis */
+.container-login {
+    position: relative;
+    display: flex;
+    width: 84%;
+    max-width: 1100px;
+    height: 70vh;
+    max-height: 560px;
+    margin: auto;
+}
+
+/* Painel escuro (Bem Vindo(a) ao BariX) */
+.painel-apresentacao {
+    position: relative;
+    z-index: 2;            /* fica por cima do painel claro */
+    width: 50%;
+    padding: 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    background-color: var(--preto-painel);
+    color: var(--branco);
+    border-radius: 24px;
+}
+
+.painel-apresentacao h2 {
+    margin: 0 0 30px 0;
+    font-size: 44px;
+    line-height: 1.2;
+}
+
+/* Itens que existem no HTML mas não aparecem no Figma */
+.logo,
+.texto-descricao {
+    display: none;
+}
+
+/* "Ainda não tem uma conta?" + botão Criar Conta */
+.texto-cadastro {
+    margin: 0;
+    font-size: 12px;
+    color: #CFCFCF;
+}
+
+.btn-criarConta,
+.btn-login {
+    display: block;
+    width: fit-content;
+    margin: 10px auto 0 auto;
+    padding: 7px 18px;
+    border-radius: 4px;
+    background-color: var(--verde-escuro);
+    color: var(--branco);
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn-criarConta:hover,
+.btn-login:hover {
+    background-color: var(--verde);
+}
+
+/* Painel claro (formulário) */
+.painel-formularios {
+    flex: 1;
+    margin-left: -40px;    /* entra um pouco por baixo do painel escuro */
+    padding-left: 40px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: var(--cinza);
+    border-radius: 24px;
+}
+
+.area-login {
+    width: 100%;
+    max-width: 300px;
+}
+
+.area-login h2 {
+    margin: 0 0 6px 0;
+    text-align: center;
+    font-size: 38px;
+    color: var(--preto-painel);
+}
+
+.area-login > p {
+    margin: 0 0 20px 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--texto-suave);
+}
+
+.area-login form {
+    display: flex;
+    flex-direction: column;
+}
+
+.area-login label {
+    margin-bottom: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.area-login input {
+    height: 32px;
+    margin-bottom: 14px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--branco);
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.area-login input:focus {
+    outline: 2px solid var(--verde);
+}
+
+/* Botão Entrar (laranja, centralizado). A regra ::first-letter deixa só
+   a primeira letra maiúscula: "ENTRAR" aparece como "Entrar" */
+.btn-entrar {
+    align-self: center;
+    margin-top: 10px;
+    padding: 9px 44px;
+    border-radius: 4px;
+    background-color: var(--laranja);
+    color: var(--preto-painel);
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: lowercase;
+}
+
+.btn-entrar::first-letter {
+    text-transform: uppercase;
+}
+
+.btn-entrar:hover {
+    background-color: #E09A2E;
+}
+
+/* Botão Sair no canto do quadro (laranja no login, verde no criar conta) */
+.container-login .btn-sair {
+    position: absolute;
+    left: 18px;
+    bottom: 18px;
+    z-index: 3;
+    background-color: var(--laranja);
+    color: var(--preto-painel);
+}
+
+/* Criar Conta: o formulário fica na esquerda e o painel escuro na direita */
+.criar-conta {
+    flex-direction: row-reverse;
+}
+
+.criar-conta .painel-formularios {
+    margin-left: 0;
+    padding-left: 0;
+    margin-right: -40px;
+    padding-right: 40px;
+}
+
+.criar-conta .btn-sair {
+    background-color: var(--verde);
+    color: var(--branco);
+}
+
+
+/* =====================================================
+   5. MENU LATERAL E ESTRUTURA DAS TELAS DO SISTEMA
+   (Início, Comandas e Estoque)
+   ===================================================== */
+.pagina-sistema {
+    background-color: var(--cinza);
+}
+
+/* Menu lateral verde, fixo na esquerda */
+.menu-lateral {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 200px;
+    padding: 28px 14px;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: var(--verde-escuro);
+}
+
+.logo-menu {
+    margin-bottom: 36px;
+    padding-left: 6px;
+}
+
+.logo-menu strong {
+    display: block;
+    font-size: 26px;
+    letter-spacing: 1px;
+    color: var(--branco);
+}
+
+.logo-menu span {
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #9FB8AA;
+}
+
+.menu-lateral a {
+    display: block;
+    margin-bottom: 10px;
+    padding: 11px 14px;
+    border-radius: 8px;
+    color: var(--branco);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.menu-lateral a:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Página em que o usuário está agora */
+.menu-lateral a.ativo {
+    background-color: var(--verde);
+}
+
+/* Sair fica no fim do menu */
+.menu-lateral .btn-sair {
+    align-self: flex-start;
+    margin: auto 0 0 0;
+    background-color: var(--verde);
+}
+
+/* Área com o conteúdo, ao lado do menu */
+.conteudo {
+    min-height: 100vh;
+    margin-left: 200px;
+    padding: 28px 32px;
+}
+
+/* Título da página + Funcionário no canto direito */
+.cabecalho-pagina {
+    position: relative;
+    margin-bottom: 22px;
+}
+
+.cabecalho-pagina h1 {
+    margin: 0;
+    font-size: 30px;
+    color: var(--preto-painel);
+}
+
+.cabecalho-pagina p {
+    margin: 4px 0 0 0;
+    font-size: 12px;
+    color: var(--texto-suave);
+}
+
+.funcionario {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    display: grid;
+    grid-template-columns: 36px auto;
+    column-gap: 10px;
+    align-items: center;
+}
+
+/* Bolinha que faz o papel de foto do funcionário */
+.funcionario::before {
+    content: "";
+    grid-row: 1 / 3;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--verde-claro);
+}
+
+.funcionario p {
+    margin: 0;
+    font-size: 11px;
+}
+
+.cabecalho-pagina .funcionario p {
+    margin: 0;
+    font-size: 11px;
+}
+
+.funcionario p:first-of-type {
+    font-weight: bold;
+    color: var(--preto-painel);
+}
+
+
+/* =====================================================
+   6. TELA INICIAL
+   ===================================================== */
+
+/* Os dois cards de resumo (Comandas abertas / Alertas de estoque) */
+.resumo {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 26px;
+}
+
+.cartao-resumo {
+    position: relative;
+    width: 240px;
+    padding: 16px 16px 14px 70px;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    background-color: var(--branco);
+}
+
+/* Círculo decorativo à esquerda do card */
+.cartao-resumo::before {
+    content: "";
+    position: absolute;
+    left: 16px;
+    top: 22px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--verde-claro);
+}
+
+.cartao-resumo h4 {
+    margin: 0;
+    font-size: 12px;
+    color: var(--texto-suave);
+}
+
+.cartao-resumo p {
+    margin: 2px 0 4px 0;
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--preto-painel);
+}
+
+.cartao-resumo a {
+    font-size: 12px;
+    color: var(--verde);
+    text-decoration: none;
+}
+
+.cartao-resumo a:hover {
+    text-decoration: underline;
+}
+
+/* Card de alerta (laranja) */
+.cartao-alerta {
+    border-color: var(--laranja);
+    background-color: var(--laranja-claro);
+}
+
+.cartao-alerta::before {
+    background-color: #FCE5B9;
+}
+
+/* Parte de baixo: cards de comandas na esquerda + painel na direita */
+.layout-duas-colunas {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    gap: 18px;
+    align-items: start;
+}
+
+/* Linha com o título da seção e um botão */
+.titulo-secao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.titulo-secao h2 {
+    margin: 0;
+    font-size: 16px;
+    color: var(--preto-painel);
+}
+
+/* Grade com 3 cards por linha */
+.grade-comandas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.cartao-comanda {
+    padding: 12px 14px;
+    border-top: 4px solid var(--verde);
+    border-radius: 8px;
+    background-color: var(--branco);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.comanda-nome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.cartao-comanda p {
+    margin: 4px 0 0 0;
+    font-size: 11px;
+    color: var(--texto-suave);
+}
+
+.comanda-total {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    font-size: 11px;
+    color: var(--texto-suave);
+}
+
+.comanda-total strong {
+    font-size: 13px;
+    color: var(--preto-painel);
+}
+
+/* Bolinha de status do card */
+.bolinha {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--verde);
+}
+
+/* Botão "Ver detalhes" */
+.ver-detalhes {
+    display: block;
+    padding: 6px;
+    border-radius: 4px;
+    background-color: var(--verde-claro);
+    color: var(--verde);
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* Cores de cada situação: a classe do card troca a borda, a bolinha e o botão */
+.borda-amarela {
+    border-top-color: var(--laranja);
+}
+
+.borda-amarela .bolinha {
+    background-color: var(--laranja);
+}
+
+.borda-amarela .ver-detalhes {
+    background-color: #FFF1D6;
+    color: #B7791F;
+}
+
+.borda-vermelha {
+    border-top-color: var(--vermelho);
+}
+
+.borda-vermelha .bolinha {
+    background-color: var(--vermelho);
+}
+
+.borda-vermelha .ver-detalhes {
+    background-color: #FDE3E3;
+    color: #C0392B;
+}
+
+/* Painel branco da direita (Estoque em alerta / Últimas movimentações) */
+.painel-lateral {
+    padding: 16px;
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    background-color: var(--branco);
+}
+
+.painel-lateral h3 {
+    margin: 0 0 12px 0;
+    font-size: 13px;
+    color: var(--preto-painel);
+}
+
+.painel-lateral h3:not(:first-child) {
+    margin-top: 22px;
+}
+
+.item-alerta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Quadradinho que faz o papel de ícone do produto */
+.item-alerta::before {
+    content: "";
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    background-color: var(--verde-claro);
+}
+
+.item-alerta small {
+    display: block;
+    font-weight: normal;
+    color: var(--laranja);
+}
+
+.movimento {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #E3E6E4;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.movimento small {
+    display: block;
+    font-weight: normal;
+    color: var(--texto-suave);
+}
+
+.movimento span {
+    color: var(--verde);
+}
+
+
+/* =====================================================
+   7. TABELAS (Comandas e Estoque)
+   ===================================================== */
+.cartao-tabela {
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    background-color: var(--branco);
+}
+
+.cartao-tabela h2 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: var(--preto-painel);
+}
+
+.cartao-tabela table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.cartao-tabela th {
+    padding: 8px;
+    border-bottom: 1px solid #E3E6E4;
+    text-align: left;
+    font-size: 11px;
+    color: var(--texto-suave);
+}
+
+.cartao-tabela td {
+    padding: 9px 8px;
+    border-bottom: 1px solid #EEF0EE;
+}
+
+/* Caixa com barra de rolagem para listas grandes */
+.tabela-rolagem {
+    max-height: 230px;
+    overflow-y: auto;
+}
+
+/* Etiquetinha de status ("Em andamento", "Normal", "Em alerta") */
+.status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+}
+
+.status-andamento,
+.status-normal {
+    background-color: var(--verde-claro);
+    color: var(--verde);
+}
+
+.status-alerta {
+    background-color: #FCE5B9;
+    color: #B7791F;
+}
+
+/* Botão quadrado de editar */
+.btn-editar {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--borda);
+    border-radius: 6px;
+    background-color: var(--branco);
+    color: var(--texto-suave);
+    line-height: 24px;
+    text-align: center;
+    text-decoration: none;
+}
+
+
+/* =====================================================
+   8. TELA DE ESTOQUE
+   ===================================================== */
+
+/* Três cards de números (total, em alerta, estoque mínimo) */
+.estatisticas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.cartao-estatistica {
+    padding: 14px 16px;
+    border-radius: 10px;
+    background-color: var(--verde-claro);
+    font-size: 11px;
+    color: var(--texto-suave);
+}
+
+.cartao-estatistica strong {
+    display: block;
+    font-size: 26px;
+    color: var(--preto-painel);
+}
+
+.cartao-estatistica.alerta {
+    background-color: #FCE5B9;
+}
+
+.cartao-estatistica.neutro {
+    background-color: #E8EFEA;
+}
+
+/* Barra de busca e filtros */
+.filtros {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.filtros input,
+.filtros select {
+    padding: 7px 10px;
+    border: 1px solid var(--borda);
+    border-radius: 6px;
+    background-color: var(--branco);
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.filtros input {
+    flex: 1;
+}
+
+
+/* =====================================================
+   9. TELA NOVA COMANDA / COMANDA CRIADA
+   ===================================================== */
+.pagina-formulario {
+    padding: 30px;
+    background-color: #F5F5F5;
+}
+
+/* "Janela" branca com barra de título */
+.janela {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto 30px auto;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background-color: var(--branco);
+    overflow: hidden;
+}
+
+.janela-titulo {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--borda);
+    background-color: #F3F3F3;
+    font-size: 15px;
+    font-weight: bold;
+    color: #02542D;
+}
+
+.janela-corpo {
+    padding: 14px 20px 20px 20px;
+}
+
+.janela-corpo small {
+    display: block;
+    margin-bottom: 14px;
+    font-size: 10px;
+}
+
+.janela-corpo label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #02542D;
+}
+
+.janela-corpo input,
+.janela-corpo select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--borda);
+    border-radius: 6px;
+    background-color: var(--branco);
+    font-family: inherit;
+    font-size: 12px;
+}
+
+/* Campo "Nome do Cliente" (mais alto) */
+.janela-corpo .campo-grande {
+    height: 56px;
+    margin-bottom: 30px;
+}
+
+/* Linha: Consumo | + | Quant. | Valor Un. */
+.linha-consumo {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.linha-consumo > div:first-child {
+    flex: 1;
+}
+
+.linha-consumo .campo-pequeno {
+    width: 92px;
+}
+
+.btn-adicionar {
+    width: 38px;
+    height: 34px;
+    border: 1px solid #1F7A3A;
+    border-radius: 4px;
+    background-color: #6BEF7A;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Lista de produtos já adicionados (aparece "apagada") */
+.lista-consumo {
+    max-height: 100px;
+    margin: 24px 0 8px 0;
+    overflow-y: auto;
+}
+
+.item-consumo {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 12px;
+    color: #A0A0A0;
+}
+
+/* Botões de baixo: Cancelar / Criar comanda / Fechar comanda */
+.botoes-janela {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.botoes-janela .btn-verde {
+    flex: 1;
+    padding: 14px;
+    font-size: 14px;
+    background-color: #02542D;
+}
+
+.btn-cancelar {
+    display: block;
+    flex: 1;
+    padding: 14px;
+    color: var(--texto);
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid var(--borda);
+    border-radius: 6px;
+    background-color: #F3F3F3;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.total-comanda {
+    font-size: 14px;
+    font-weight: bold;
+    color: #02542D;
+}
+
+
+/* =====================================================
+   10. TELAS MENORES (celular / janela estreita)
+   ===================================================== */
+@media (max-width: 900px) {
+    .layout-duas-colunas {
+        grid-template-columns: 1fr;
+    }
+
+    .grade-comandas {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 800px) {
+    .pagina-login {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .container-login,
+    .criar-conta {
+        flex-direction: column;
+        height: auto;
+        max-height: none;
+    }
+
+    .painel-apresentacao {
+        width: 100%;
+    }
+
+    .painel-formularios,
+    .criar-conta .painel-formularios {
+        margin: -30px 0 0 0;
+        padding: 60px 20px 30px 20px;
+    }
+
+    .painel-apresentacao h2 {
+        font-size: 30px;
+    }
+}

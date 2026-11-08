@@ -15,7 +15,7 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public long contarItensEmAlerta(){ //Quantos itens estão em alerta de estoque
+    public long contarItensEmAlerta(){//Quantos itens estão em alerta de estoque
         return itemRepository.countByQuantidadeLessThan(10);
     }
 

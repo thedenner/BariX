@@ -14,4 +14,5 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     //ordene pela quantidade do menor para o maior
     List<Item> findByQuantidadeLessThanOrderByQuantidadeAsc(Integer quantidade);
 
+
 }

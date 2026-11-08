@@ -15,11 +15,13 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     public CategoryController(CategoryService categoryService) {
+
         this.categoryService = categoryService;
     }
 
     @GetMapping
     public List<Category> listarTodas() {
+
         return categoryService.listarTodas();
     }
 
@@ -28,6 +30,7 @@ public class CategoryController {
 
         //Optional com Category ou Optional vazio
         Optional<Category> category = categoryService.buscarPorId(id);
+
         //Existe uma categoria dentro do Optional
         if (category.isPresent()) {
             //Se existir -> Pega o objeto Category
@@ -42,8 +45,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> atualizar(@PathVariable Integer id,
-                                              @RequestBody Category category) {
+    public ResponseEntity<Category> atualizar(@PathVariable Integer id, @RequestBody Category category) {
 
         Optional<Category> categoryAtualizada = categoryService.atualizar(id, category);
 
@@ -60,6 +62,7 @@ public class CategoryController {
         boolean excluida = categoryService.excluir(id);
 
         if (excluida) {
+
             return ResponseEntity.noContent().build();
         }
 

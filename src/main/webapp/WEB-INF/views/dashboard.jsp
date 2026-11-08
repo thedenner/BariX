@@ -201,7 +201,7 @@
                             </p>
 
                             <h2 class="fw-bold mb-0">
-                                ${totalDeItens}
+                                ${totalItens}
                             </h2>
 
                         </div>
@@ -224,7 +224,7 @@
                             </p>
 
                             <h2 class="fw-bold mb-0">
-                                ${alertaEstoque}
+                                ${alertasEstoque}
                             </h2>
 
                         </div>
