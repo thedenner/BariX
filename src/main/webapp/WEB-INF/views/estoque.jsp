@@ -383,172 +383,132 @@
                     </div>
 
 
+
                     <div class="table-responsive">
 
-                        <table class="table align-middle">
+                        <table class="table table-hover align-middle">
 
+                            <!-- CABEÇALHO -->
                             <thead>
-
                             <tr>
-
-                                <th>
-                                    Produto
-                                </th>
-
-                                <th>
-                                    Categoria
-                                </th>
-
-                                <th>
-                                    Estoque atual
-                                </th>
-
-                                <th>
-                                    Preço
-                                </th>
-
-                                <th>
-                                    Status
-                                </th>
-
-                                <th>
-                                    Ações
-                                </th>
-
+                                <th scope="col">Produto</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col">Estoque atual</th>
+                                <th scope="col">Preço</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Ações</th>
                             </tr>
-
                             </thead>
 
-
+                            <!-- DADOS -->
                             <tbody>
 
-                            <c:forEach
-                                    var="item"
-                                    items="${itens}"
-                            >
+                            <c:forEach var="item" items="${itens}">
 
                                 <tr>
 
-                                    <td>
+                                    <!-- 1. PRODUTO -->
+                                    <td class="fw-semibold">
+                                        <c:out value="${item.nome}"/>
+                                    </td>
 
+                                    <!-- 2. CATEGORIA -->
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${item.category != null}">
+                                                <c:out value="${item.category.nome}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                <span class="text-secondary">
+                                    Sem categoria
+                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+
+                                    <!-- 3. ESTOQUE ATUAL -->
+                                    <td>
+                                        <c:out value="${item.quantidade}"/> un.
+                                    </td>
+
+                                    <!-- 4. PREÇO -->
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${item.preco != null}">
+                                                R$ <c:out value="${item.preco}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                <span class="text-secondary">
+                                    Não informado
+                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+
+                                    <!-- 5. STATUS -->
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${item.quantidade lt estoqueMinimo}">
+                                <span class="badge bg-danger">
+                                    Alerta
+                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                <span class="badge bg-success">
+                                    Normal
+                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+
+                                    <!-- 6. AÇÕES -->
+                                    <td>
                                         <div class="d-flex gap-2">
 
                                             <!-- EDITAR -->
-
                                             <a
                                                     href="${pageContext.request.contextPath}/estoque/${item.id}/editar"
-                                                    class="btn btn-success"
-                                            >
+                                                    class="btn btn-sm btn-success">
                                                 Editar
                                             </a>
 
-
                                             <!-- EXCLUIR -->
-
                                             <form
                                                     method="post"
                                                     action="${pageContext.request.contextPath}/estoque/${item.id}/excluir"
-                                                    onsubmit="return confirm('Deseja realmente excluir este produto?');"
-                                            >
+                                                    onsubmit="return confirm('Deseja realmente excluir este produto?');">
+
+                                                <c:if test="${not empty _csrf}">
+                                                    <input
+                                                            type="hidden"
+                                                            name="${_csrf.parameterName}"
+                                                            value="${_csrf.token}">
+                                                </c:if>
 
                                                 <button
                                                         type="submit"
-                                                        class="btn btn-danger"
-                                                >
+                                                        class="btn btn-sm btn-danger">
                                                     Excluir
                                                 </button>
 
                                             </form>
 
                                         </div>
-
-                                    </td>
-
-                                    <td>
-                                            ${item.nome}
-                                    </td>
-
-
-                                    <td>
-
-                                        <c:choose>
-
-                                            <c:when test="${item.category != null}">
-                                                ${item.category.nome}
-                                            </c:when>
-
-                                            <c:otherwise>
-                                                Sem categoria
-                                            </c:otherwise>
-
-                                        </c:choose>
-
-                                    </td>
-
-
-                                    <td>
-                                            ${item.quantidade} un. - mínimo ${estoqueMinimo}
-                                    </td>
-
-
-                                    <td>
-                                        R$ ${item.preco}
-                                    </td>
-
-
-                                    <td>
-
-                                        <c:choose>
-
-                                            <c:when test="${item.quantidade < estoqueMinimo}">
-
-                                                <span class="text-danger fw-bold">
-                                                    Alerta
-                                                </span>
-
-                                            </c:when>
-
-                                            <c:otherwise>
-
-                                                <span class="text-success fw-bold">
-                                                    Normal
-                                                </span>
-
-                                            </c:otherwise>
-
-                                        </c:choose>
-
                                     </td>
 
                                 </tr>
 
                             </c:forEach>
 
-
+                            <!-- NENHUM PRODUTO -->
                             <c:if test="${empty itens}">
-
                                 <tr>
-
-                                    <td>
-
-                                        <a
-                                                href="${pageContext.request.contextPath}/estoque/${item.id}/editar"
-                                                class="btn btn-success"
-                                        >
-                                            Editar
-                                        </a>
-
-                                    </td>
-
                                     <td
-                                            colspan="5"
-                                            class="text-center text-secondary py-4"
-                                    >
-                                        Nenhum produto cadastrado.
+                                            colspan="6"
+                                            class="text-center text-secondary py-4">
+                                        Nenhum produto encontrado.
                                     </td>
-
                                 </tr>
-
                             </c:if>
 
                             </tbody>
@@ -556,6 +516,7 @@
                         </table>
 
                     </div>
+
 
                 </div>
 
