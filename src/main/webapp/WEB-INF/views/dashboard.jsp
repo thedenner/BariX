@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
@@ -5,39 +6,37 @@
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
 
-    <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1"
-    >
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
 
     <title>BariX - Dashboard</title>
 
     <!-- BOOTSTRAP LOCAL -->
-    <link
-            rel="stylesheet"
-            href="${pageContext.request.contextPath}/bootstrap/css/bootstrap.min.css"
-    >
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/bootstrap/css/bootstrap.min.css">
 
     <style>
-
-        body {
-            background-color: #f3f4f2;
+        :root {
+            --barix-verde: #163c2e;
+            --barix-fundo: #f3f4f2;
         }
 
-        /* =========================
-           SIDEBAR
-        ========================= */
+        body {
+            background-color: var(--barix-fundo);
+        }
+
+        /* SIDEBAR */
 
         .sidebar {
             min-height: 100vh;
-            background-color: #163c2e;
+            background-color: var(--barix-verde);
         }
 
         .sidebar .nav-link {
             color: #ffffff;
+            transition: background-color 0.2s;
         }
 
         .sidebar .nav-link:hover {
@@ -46,7 +45,8 @@
 
         .sidebar .nav-link.active {
             background-color: #ffffff;
-            color: #163c2e;
+            color: var(--barix-verde);
+            font-weight: 600;
         }
 
         .brand-subtitle {
@@ -54,33 +54,80 @@
             letter-spacing: 0.15rem;
         }
 
-        /* =========================
-           CARDS
-        ========================= */
+        /* CONTEÚDO */
+
+        .dashboard-main {
+            min-width: 0;
+        }
 
         .card-dashboard {
             border: 0;
             border-radius: 12px;
         }
 
-    </style>
+        .card-dashboard .card-body {
+            min-width: 0;
+        }
 
+        .indicador-numero {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        /* MODAL */
+
+        .modal-content {
+            border: 0;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background-color: var(--barix-verde);
+            color: white;
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+        .modal-footer {
+            border-top: 1px solid #eeeeee;
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 767.98px) {
+            .sidebar {
+                min-height: auto;
+            }
+
+            .dashboard-main {
+                padding: 1.5rem !important;
+            }
+
+            .dashboard-section-header {
+                align-items: flex-start !important;
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container-fluid">
+<div class="container-fluid px-0">
 
-    <div class="row">
+    <div class="row g-0">
 
-        <!-- ==========================================
+        <!-- =====================================
              SIDEBAR
-        =========================================== -->
+        ====================================== -->
 
         <aside class="col-md-2 sidebar p-4">
 
             <div class="text-white mb-5">
-
                 <h2 class="fw-bold mb-0">
                     BARIX
                 </h2>
@@ -88,44 +135,31 @@
                 <div class="brand-subtitle">
                     GESTÃO DO BAR
                 </div>
-
             </div>
-
 
             <nav class="nav flex-column gap-2">
 
-                <a
-                        class="nav-link active rounded px-3 py-2"
-                        href="${pageContext.request.contextPath}/"
-                >
+                <a class="nav-link active rounded px-3 py-2"
+                   href="${pageContext.request.contextPath}/">
                     Início
                 </a>
 
-
-                <a
-                        class="nav-link rounded px-3 py-2"
-                        href="${pageContext.request.contextPath}/comandas"
-                >
+                <a class="nav-link rounded px-3 py-2"
+                   href="${pageContext.request.contextPath}/comandas">
                     Comandas
                 </a>
 
-
-                <a
-                        class="nav-link rounded px-3 py-2"
-                        href="${pageContext.request.contextPath}/estoque"
-                >
+                <a class="nav-link rounded px-3 py-2"
+                   href="${pageContext.request.contextPath}/estoque">
                     Estoque
                 </a>
 
             </nav>
 
-
             <div class="mt-5">
 
-                <a
-                        class="nav-link rounded px-3 py-2 text-white"
-                        href="#"
-                >
+                <a class="nav-link rounded px-3 py-2 text-white"
+                   href="#">
                     Sair
                 </a>
 
@@ -134,21 +168,18 @@
         </aside>
 
 
-        <!-- ==========================================
+        <!-- =====================================
              CONTEÚDO PRINCIPAL
-        =========================================== -->
+        ====================================== -->
 
-        <main class="col-md-10 p-5">
+        <main class="col-md-10 dashboard-main p-5">
 
-
-            <!-- ======================================
-                 CABEÇALHO
-            ======================================= -->
+            <!-- CABEÇALHO -->
 
             <div class="mb-4">
 
                 <h2 class="fw-bold">
-                    Olá, ${nomeFuncionario}!
+                    Olá, <c:out value="${nomeFuncionario}"/>!
                 </h2>
 
                 <p class="text-secondary">
@@ -158,18 +189,40 @@
             </div>
 
 
-            <!-- ======================================
+            <!-- =================================
+                 MENSAGENS DO BACKEND
+            ================================== -->
+
+            <c:if test="${not empty mensagemSucesso}">
+
+                <div class="alert alert-success"
+                     role="alert">
+                    <c:out value="${mensagemSucesso}"/>
+                </div>
+
+            </c:if>
+
+            <c:if test="${not empty mensagemErro}">
+
+                <div class="alert alert-danger"
+                     role="alert">
+                    <c:out value="${mensagemErro}"/>
+                </div>
+
+            </c:if>
+
+
+            <!-- =================================
                  INDICADORES
-            ======================================= -->
+            ================================== -->
 
             <div class="row g-4 mb-4">
-
 
                 <!-- COMANDAS ABERTAS -->
 
                 <div class="col-md-4">
 
-                    <div class="card card-dashboard shadow-sm">
+                    <div class="card card-dashboard shadow-sm h-100">
 
                         <div class="card-body p-4">
 
@@ -177,9 +230,9 @@
                                 Comandas abertas
                             </p>
 
-                            <h2 class="fw-bold mb-0">
-                                ${comandasAbertas}
-                            </h2>
+                            <div class="indicador-numero">
+                                <c:out value="${comandasAbertas}"/>
+                            </div>
 
                         </div>
 
@@ -192,7 +245,7 @@
 
                 <div class="col-md-4">
 
-                    <div class="card card-dashboard shadow-sm">
+                    <div class="card card-dashboard shadow-sm h-100">
 
                         <div class="card-body p-4">
 
@@ -200,9 +253,9 @@
                                 Total de produtos
                             </p>
 
-                            <h2 class="fw-bold mb-0">
-                                ${totalItens}
-                            </h2>
+                            <div class="indicador-numero">
+                                <c:out value="${totalItens}"/>
+                            </div>
 
                         </div>
 
@@ -215,7 +268,7 @@
 
                 <div class="col-md-4">
 
-                    <div class="card card-dashboard shadow-sm">
+                    <div class="card card-dashboard shadow-sm h-100">
 
                         <div class="card-body p-4">
 
@@ -223,9 +276,9 @@
                                 Alertas de estoque
                             </p>
 
-                            <h2 class="fw-bold mb-0">
-                                ${alertasEstoque}
-                            </h2>
+                            <div class="indicador-numero text-danger">
+                                <c:out value="${alertasEstoque}"/>
+                            </div>
 
                         </div>
 
@@ -236,16 +289,16 @@
             </div>
 
 
-            <!-- ======================================
+            <!-- =================================
                  PARTE INFERIOR
-            ======================================= -->
+            ================================== -->
 
             <div class="row g-4">
 
 
-                <!-- ==================================
+                <!-- =============================
                      ÚLTIMAS COMANDAS
-                =================================== -->
+                ============================== -->
 
                 <div class="col-lg-8">
 
@@ -253,37 +306,40 @@
 
                         <div class="card-body p-4">
 
+                            <div class="d-flex justify-content-between align-items-center mb-4 dashboard-section-header">
 
-                            <!-- CABEÇALHO -->
+                                <div>
+                                    <h5 class="fw-bold mb-1">
+                                        Últimas comandas
+                                    </h5>
 
-                            <div
-                                    class="d-flex justify-content-between align-items-center mb-4"
-                            >
+                                    <small class="text-secondary">
+                                        Prévia visual — integração em andamento
+                                    </small>
+                                </div>
 
-                                <h5 class="fw-bold mb-0">
-                                    Últimas comandas
-                                </h5>
+                                <!-- BOTÃO QUE ABRE O MODAL -->
 
                                 <button
                                         type="button"
                                         class="btn btn-success"
-                                >
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalNovaComanda">
+
                                     + Nova comanda
+
                                 </button>
 
                             </div>
 
 
-                            <!-- COMANDAS -->
+                            <!-- EXEMPLOS VISUAIS TEMPORÁRIOS -->
 
                             <div class="row g-3">
 
-
-                                <!-- COMANDA EXEMPLO 1 -->
-
                                 <div class="col-md-6">
 
-                                    <div class="border rounded p-3">
+                                    <div class="border rounded p-3 h-100">
 
                                         <h6 class="fw-bold">
                                             Flora Antunes
@@ -294,15 +350,13 @@
                                         </p>
 
                                         <small class="text-secondary">
-                                            Aberta há 02:08
+                                            Exemplo visual
                                         </small>
 
                                         <div class="mt-3">
-
                                             <strong>
                                                 R$ 164,90
                                             </strong>
-
                                         </div>
 
                                     </div>
@@ -310,11 +364,9 @@
                                 </div>
 
 
-                                <!-- COMANDA EXEMPLO 2 -->
-
                                 <div class="col-md-6">
 
-                                    <div class="border rounded p-3">
+                                    <div class="border rounded p-3 h-100">
 
                                         <h6 class="fw-bold">
                                             Felipe Macedo
@@ -325,15 +377,13 @@
                                         </p>
 
                                         <small class="text-secondary">
-                                            Aberta há 00:20
+                                            Exemplo visual
                                         </small>
 
                                         <div class="mt-3">
-
                                             <strong>
                                                 R$ 41,00
                                             </strong>
-
                                         </div>
 
                                     </div>
@@ -349,16 +399,13 @@
                 </div>
 
 
-                <!-- ==================================
+                <!-- =============================
                      COLUNA DIREITA
-                =================================== -->
+                ============================== -->
 
                 <div class="col-lg-4">
 
-
-                    <!-- ==============================
-                         ESTOQUE EM ALERTA
-                    =============================== -->
+                    <!-- ESTOQUE EM ALERTA -->
 
                     <div class="card card-dashboard shadow-sm mb-4">
 
@@ -368,36 +415,27 @@
                                 Estoque em alerta
                             </h5>
 
-
-                            <!--
-                                Percorre a List<Item>
-                                enviada pelo DashboardViewController
-                            -->
-
                             <c:forEach
                                     var="item"
-                                    items="${itensEmAlerta}"
-                            >
+                                    items="${itensEmAlerta}">
 
                                 <div class="mb-3">
 
                                     <strong>
-                                            ${item.nome}
+                                        <c:out value="${item.nome}"/>
                                     </strong>
 
                                     <div class="text-danger">
-                                            ${item.quantidade} un. - mínimo 10
+
+                                        <c:out value="${item.quantidade}"/>
+                                        un. - mínimo 10
+
                                     </div>
 
                                 </div>
 
                             </c:forEach>
 
-
-                            <!--
-                                Caso não exista nenhum produto
-                                abaixo do estoque mínimo.
-                            -->
 
                             <c:if test="${empty itensEmAlerta}">
 
@@ -412,9 +450,7 @@
                     </div>
 
 
-                    <!-- ==============================
-                         ÚLTIMAS MOVIMENTAÇÕES
-                    =============================== -->
+                    <!-- ÚLTIMAS MOVIMENTAÇÕES -->
 
                     <div class="card card-dashboard shadow-sm">
 
@@ -424,19 +460,15 @@
                                 Últimas movimentações
                             </h5>
 
+                            <small class="text-secondary">
+                                Exemplos visuais
+                            </small>
+
                             <hr>
 
-                            <p>
-                                Comanda #027
-                            </p>
-
-                            <p>
-                                Comanda #026
-                            </p>
-
-                            <p class="mb-0">
-                                Comanda #025
-                            </p>
+                            <p>Comanda #027</p>
+                            <p>Comanda #026</p>
+                            <p class="mb-0">Comanda #025</p>
 
                         </div>
 
@@ -453,11 +485,131 @@
 </div>
 
 
-<!-- BOOTSTRAP JAVASCRIPT LOCAL -->
-<script
-        src="${pageContext.request.contextPath}/bootstrap/js/bootstrap.bundle.min.js">
-</script>
+<!-- ==========================================
+     MODAL — NOVA COMANDA
+=========================================== -->
+
+<div
+        class="modal fade"
+        id="modalNovaComanda"
+        tabindex="-1"
+        aria-labelledby="modalNovaComandaTitulo"
+        aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <!-- CABEÇALHO -->
+
+            <div class="modal-header">
+
+                <h5 class="modal-title fw-bold"
+                    id="modalNovaComandaTitulo">
+
+                    Nova comanda
+
+                </h5>
+
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Fechar">
+                </button>
+
+            </div>
+
+
+            <!-- FORMULÁRIO -->
+
+            <form
+                    method="post"
+                    action="${pageContext.request.contextPath}/comandas/nova">
+
+                <!-- CSRF: utilizado caso Spring Security esteja ativo -->
+
+                <c:if test="${not empty _csrf}">
+                    <input
+                            type="hidden"
+                            name="${_csrf.parameterName}"
+                            value="${_csrf.token}">
+                </c:if>
+
+
+                <div class="modal-body">
+
+                    <p class="text-secondary mb-4">
+                        Informe o nome do cliente para abrir
+                        uma nova comanda.
+                    </p>
+
+                    <div class="mb-3">
+
+                        <label
+                                for="nomeCliente"
+                                class="form-label">
+
+                            Nome do cliente
+
+                        </label>
+
+                        <input
+                                type="text"
+                                id="nomeCliente"
+                                name="nomeCliente"
+                                class="form-control"
+                                maxlength="100"
+                                required
+                                placeholder="Ex.: Felipe">
+
+                        <div class="form-text">
+                            O nome será utilizado para identificar
+                            a comanda.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BOTÕES -->
+
+                <div class="modal-footer">
+
+                    <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                            type="submit"
+                            class="btn btn-success">
+
+                        Abrir comanda
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     BOOTSTRAP JAVASCRIPT OFICIAL
+=========================================== -->
+
+<script src="${pageContext.request.contextPath}/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>

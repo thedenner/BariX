@@ -1,6 +1,8 @@
 package barix.com.br.controller;
 
+import barix.com.br.dto.ComandaFormDTO;
 import barix.com.br.entity.Item;
+import barix.com.br.service.ComandaService;
 import barix.com.br.service.ItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,10 +14,12 @@ import java.util.List;
 public class DashboardViewController {
 
     private final ItemService itemService;
+    private final ComandaService comandaService;
 
-    public DashboardViewController(ItemService itemService) {
+    public DashboardViewController(ItemService itemService, ComandaService comandaService) {
 
         this.itemService = itemService;
+        this.comandaService = comandaService;
     }
 
     @GetMapping("/")
@@ -27,11 +31,18 @@ public class DashboardViewController {
 
         long totalItens = itemService.contarTotalItens();
 
+        long comandasAbertas = comandaService.contarAbertas();
+
         model.addAttribute("nomeFuncionario", "Pedro");
-        model.addAttribute("comandasAbertas", 8);
+        model.addAttribute("comandasAbertas", comandasAbertas);
         model.addAttribute("alertaEstoque", alertasEstoque);
         model.addAttribute("itensEmAlerta", itensEmAlerta);
         model.addAttribute("totalDeItens", totalItens);
+        /*
+         * Formulário utilizado pelo
+         * modal Nova Comanda.
+         */
+        model.addAttribute("comandaForm", new ComandaFormDTO());
 
         return "dashboard";
         }
