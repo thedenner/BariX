@@ -1,6 +1,7 @@
 package barix.com.br.controller;
 
 import barix.com.br.dto.ComandaFormDTO;
+import barix.com.br.entity.Comanda;
 import barix.com.br.entity.Item;
 import barix.com.br.service.ComandaService;
 import barix.com.br.service.ItemService;
@@ -33,18 +34,25 @@ public class DashboardViewController {
 
         long comandasAbertas = comandaService.contarAbertas();
 
-        model.addAttribute("nomeFuncionario", "Pedro");
-        model.addAttribute("comandasAbertas", comandasAbertas);
-        model.addAttribute("alertaEstoque", alertasEstoque);
+        List<Comanda> comandasRecentes = comandaService.listarRecentesAbertas();
+
+        model.addAttribute("nomeFuncionario","Pedro");
+
+        model.addAttribute("totalItens",totalItens);
+
+        model.addAttribute("alertasEstoque", alertasEstoque);
+
         model.addAttribute("itensEmAlerta", itensEmAlerta);
-        model.addAttribute("totalDeItens", totalItens);
-        /*
-         * Formulário utilizado pelo
-         * modal Nova Comanda.
-         */
+
+        model.addAttribute("comandasAbertas", comandasAbertas);
+
+        model.addAttribute("comandasRecentes",comandasRecentes);
+
         model.addAttribute("comandaForm", new ComandaFormDTO());
 
         return "dashboard";
         }
+
+
     }
 

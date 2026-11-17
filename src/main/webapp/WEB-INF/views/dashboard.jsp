@@ -218,80 +218,72 @@
 
             <div class="row g-4 mb-4">
 
-                <!-- COMANDAS ABERTAS -->
 
-                <div class="col-md-4">
+                <!-- ======================================
+                     INDICADORES DO DASHBOARD
+                ======================================= -->
 
-                    <div class="card card-dashboard shadow-sm h-100">
+                <div class="row g-4 mb-4">
 
-                        <div class="card-body p-4">
+                    <!-- COMANDAS ABERTAS -->
+                    <div class="col-md-4">
+                        <div class="card card-dashboard shadow-sm h-100">
+                            <div class="card-body p-4">
 
-                            <p class="text-secondary mb-2">
-                                Comandas abertas
-                            </p>
+                                <p class="text-secondary mb-2">
+                                    Comandas abertas
+                                </p>
 
-                            <div class="indicador-numero">
-                                <c:out value="${comandasAbertas}"/>
+                                <h2 class="fw-bold mb-0">
+                                    ${comandasAbertas}
+                                </h2>
+
                             </div>
-
                         </div>
+                    </div>
 
+                    <!-- TOTAL DE PRODUTOS -->
+                    <div class="col-md-4">
+                        <div class="card card-dashboard shadow-sm h-100">
+                            <div class="card-body p-4">
+
+                                <p class="text-secondary mb-2">
+                                    Total de produtos
+                                </p>
+
+                                <h2 class="fw-bold mb-0">
+                                    ${totalItens}
+                                </h2>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ALERTAS DE ESTOQUE -->
+                    <div class="col-md-4">
+                        <div class="card card-dashboard shadow-sm h-100">
+                            <div class="card-body p-4">
+
+                                <p class="text-secondary mb-2">
+                                    Alertas de estoque
+                                </p>
+
+                                <h2 class="fw-bold mb-0 text-danger">
+                                    ${alertasEstoque}
+                                </h2>
+
+                            </div>
+                        </div>
                     </div>
 
                 </div>
-
-
-                <!-- TOTAL DE PRODUTOS -->
-
-                <div class="col-md-4">
-
-                    <div class="card card-dashboard shadow-sm h-100">
-
-                        <div class="card-body p-4">
-
-                            <p class="text-secondary mb-2">
-                                Total de produtos
-                            </p>
-
-                            <div class="indicador-numero">
-                                <c:out value="${totalItens}"/>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ALERTAS DE ESTOQUE -->
-
-                <div class="col-md-4">
-
-                    <div class="card card-dashboard shadow-sm h-100">
-
-                        <div class="card-body p-4">
-
-                            <p class="text-secondary mb-2">
-                                Alertas de estoque
-                            </p>
-
-                            <div class="indicador-numero text-danger">
-                                <c:out value="${alertasEstoque}"/>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
             </div>
 
 
-            <!-- =================================
-                 PARTE INFERIOR
-            ================================== -->
+
+                <!-- =================================
+                     PARTE INFERIOR
+                ================================== -->
 
             <div class="row g-4">
 
@@ -326,7 +318,7 @@
                                         data-bs-toggle="modal"
                                         data-bs-target="#modalNovaComanda">
 
-                                    + Nova comanda
+                                    Nova comanda
 
                                 </button>
 
@@ -335,62 +327,76 @@
 
                             <!-- EXEMPLOS VISUAIS TEMPORÁRIOS -->
 
+
+                            <!-- COMANDAS REAIS DO BANCO -->
+
                             <div class="row g-3">
 
-                                <div class="col-md-6">
+                                <c:forEach
+                                        var="comanda"
+                                        items="${comandasRecentes}">
 
-                                    <div class="border rounded p-3 h-100">
+                                    <div class="col-md-6">
 
-                                        <h6 class="fw-bold">
-                                            Flora Antunes
-                                        </h6>
+                                        <div class="border rounded p-3 h-100">
 
-                                        <p class="mb-1">
-                                            Comanda #026
-                                        </p>
+                                            <div class="d-flex justify-content-between
+                            align-items-start mb-2">
 
-                                        <small class="text-secondary">
-                                            Exemplo visual
-                                        </small>
+                                                <h6 class="fw-bold mb-0">
+                                                    <c:out value="${comanda.nomeCliente}"/>
+                                                </h6>
 
-                                        <div class="mt-3">
-                                            <strong>
-                                                R$ 164,90
-                                            </strong>
+                                                <span class="badge bg-success">
+                        ABERTA
+                    </span>
+
+                                            </div>
+
+                                            <p class="text-secondary mb-2">
+                                                Comanda #<c:out value="${comanda.id}"/>
+                                            </p>
+
+                                            <small class="text-secondary">
+                                                Aberta em:
+                                                <c:out value="${comanda.dataAbertura}"/>
+                                            </small>
+
+                                            <div class="mt-3">
+
+                                                <button
+                                                        type="button"
+                                                        class="btn btn-outline-success btn-sm"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalDetalhesComanda"
+                                                        data-comanda-id="${comanda.id}">
+
+                                                    Ver detalhes
+
+                                                </button>
+
+                                            </div>
+
                                         </div>
 
                                     </div>
 
-                                </div>
+                                </c:forEach>
 
+                                <c:if test="${empty comandasRecentes}">
 
-                                <div class="col-md-6">
+                                    <div class="col-12">
 
-                                    <div class="border rounded p-3 h-100">
-
-                                        <h6 class="fw-bold">
-                                            Felipe Macedo
-                                        </h6>
-
-                                        <p class="mb-1">
-                                            Comanda #029
+                                        <p class="text-secondary mb-0">
+                                            Nenhuma comanda aberta no momento.
                                         </p>
-
-                                        <small class="text-secondary">
-                                            Exemplo visual
-                                        </small>
-
-                                        <div class="mt-3">
-                                            <strong>
-                                                R$ 41,00
-                                            </strong>
-                                        </div>
 
                                     </div>
 
-                                </div>
+                                </c:if>
 
                             </div>
+
 
                         </div>
 
@@ -604,12 +610,225 @@
 
 </div>
 
+<!-- MODAL - DETALHES DA COMANDA -->
+
+<div
+        class="modal fade"
+        id="modalDetalhesComanda"
+        tabindex="-1"
+        aria-hidden="true">
+
+    <div class="modal-dialog
+                modal-lg
+                modal-dialog-centered
+                modal-dialog-scrollable">
+
+        <div
+                class="modal-content"
+                id="conteudoDetalhesComanda">
+
+            <div class="modal-body p-4">
+                Carregando...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <!-- ==========================================
      BOOTSTRAP JAVASCRIPT OFICIAL
 =========================================== -->
 
 <script src="${pageContext.request.contextPath}/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const modal = document.getElementById(
+            "modalDetalhesComanda"
+        );
+
+        const conteudo = document.getElementById(
+            "conteudoDetalhesComanda"
+        );
+
+        if (!modal || !conteudo) {
+            return;
+        }
+
+        /*
+         * Executa uma requisição HTTP e retorna
+         * o fragmento HTML gerado pelo Spring MVC.
+         */
+        async function carregarFragmento(url, opcoes = {}) {
+
+            const resposta = await fetch(url, {
+                ...opcoes,
+                headers: {
+                    "Accept": "text/html",
+                    ...(opcoes.headers || {})
+                }
+            });
+
+            if (!resposta.ok) {
+                throw new Error(
+                    "Erro HTTP " + resposta.status
+                );
+            }
+
+            return resposta.text();
+        }
+
+
+        /*
+         * 1. ABRIR DETALHES
+         */
+        modal.addEventListener(
+            "show.bs.modal",
+            async function (event) {
+
+                const botao = event.relatedTarget;
+
+                const comandaId = botao?.getAttribute(
+                    "data-comanda-id"
+                );
+
+                conteudo.textContent = "Carregando detalhes...";
+
+                if (!comandaId || !/^\d+$/.test(comandaId)) {
+                    conteudo.textContent = "Comanda inválida.";
+                    return;
+                }
+
+                try {
+
+                    const url =
+                        "${pageContext.request.contextPath}/comandas/"
+                        + encodeURIComponent(comandaId)
+                        + "/detalhes";
+
+                    conteudo.innerHTML =
+                        await carregarFragmento(url);
+
+                } catch (erro) {
+
+                    console.error(erro);
+
+                    conteudo.textContent =
+                        "Não foi possível carregar a comanda.";
+                }
+            }
+        );
+
+
+        /*
+         * 2. ADICIONAR OU REMOVER PRODUTOS
+         *
+         * Utilizamos event delegation porque
+         * os formulários são recriados quando
+         * substituímos o HTML do Modal.
+         */
+        modal.addEventListener(
+            "submit",
+            async function (event) {
+
+                const formulario = event.target;
+
+                const ehInclusao = formulario.matches(
+                    "#formAdicionarProdutoComanda"
+                );
+
+                const ehRemocao = formulario.matches(
+                    ".form-remover-produto-comanda"
+                );
+
+                if (!ehInclusao && !ehRemocao) {
+                    return;
+                }
+
+                event.preventDefault();
+
+
+                // Confirma antes de remover uma linha.
+
+                if (ehRemocao) {
+
+                    const confirmado = confirm(
+                        "Deseja remover este produto da comanda?"
+                    );
+
+                    if (!confirmado) {
+                        return;
+                    }
+                }
+
+
+                const botao = formulario.querySelector(
+                    'button[type="submit"]'
+                );
+
+                if (botao) {
+                    botao.disabled = true;
+                }
+
+
+                try {
+
+                    const dados = new URLSearchParams(
+                        new FormData(formulario)
+                    );
+
+                    const html = await carregarFragmento(
+                        formulario.action,
+                        {
+                            method: "POST",
+                            body: dados
+                        }
+                    );
+
+                    /*
+                     * O servidor redireciona para
+                     * GET /comandas/{id}/detalhes.
+                     *
+                     * fetch acompanha o redirecionamento
+                     * e recebe o HTML atualizado.
+                     */
+                    conteudo.innerHTML = html;
+
+                } catch (erro) {
+
+                    console.error(
+                        "Erro ao modificar a comanda:",
+                        erro
+                    );
+
+                    const aviso = document.createElement(
+                        "div"
+                    );
+
+                    aviso.className = "alert alert-danger mt-3";
+
+                    aviso.textContent =
+                        "Não foi possível concluir a operação.";
+
+                    formulario.prepend(aviso);
+
+                } finally {
+
+                    if (botao && botao.isConnected) {
+                        botao.disabled = false;
+                    }
+                }
+            }
+        );
+
+    });
+</script>
 
 </body>
 </html>
