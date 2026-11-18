@@ -85,4 +85,32 @@ public class Movimentacao {
     public void setComanda(Comanda comanda) {
         this.comanda = comanda;
     }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public LocalDateTime getDataHora() {
+        return dataHora;
+    }
+
+    public BigDecimal getValorCompra() {
+        return valorCompra;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public Funcionario getFuncionario() {
+        return funcionario;
+    }
+
+    public Comanda getComanda() {
+        return comanda;
+    }
 }

@@ -154,16 +154,36 @@
                     Estoque
                 </a>
 
-            </nav>
+                <a class="nav-link rounded px-3 py-2"
+                   href="${pageContext.request.contextPath}/financeiro">
 
-            <div class="mt-5">
+                    Financeiro
 
-                <a class="nav-link rounded px-3 py-2 text-white"
-                   href="#">
-                    Sair
                 </a>
 
-            </div>
+            </nav>
+
+            <!-- LOGOUT -->
+
+            <form
+                    method="post"
+                    action="${pageContext.request.contextPath}/logout"
+                    class="mt-4">
+
+                <input
+                        type="hidden"
+                        name="${_csrf.parameterName}"
+                        value="${_csrf.token}">
+
+                <button
+                        type="submit"
+                        class="btn btn-outline-light w-100">
+
+                    Sair
+
+                </button>
+
+            </form>
 
         </aside>
 

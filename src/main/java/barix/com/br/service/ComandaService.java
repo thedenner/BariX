@@ -1,20 +1,25 @@
 package barix.com.br.service;
 
+import barix.com.br.dto.ComandaFiltroDTO;
 import barix.com.br.entity.*;
 import barix.com.br.repository.ComandaItemRepository;
 import barix.com.br.repository.ComandaRepository;
 
 import barix.com.br.repository.ItemRepository;
 import barix.com.br.repository.MovimentacaoRepository;
-import jakarta.transaction.Transactional;
+import barix.com.br.specification.ComandaSpecification;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 @Service
 public class ComandaService {
@@ -26,6 +31,9 @@ public class ComandaService {
     private final ItemRepository itemRepository;
     private final FuncionarioService funcionarioService;
     private final MovimentacaoRepository movimentacaoRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
 
     public ComandaService(ComandaRepository comandaRepository,
@@ -379,29 +387,26 @@ public class ComandaService {
                             )
                     );
 
-            if (produto.getQuantidade() == null
-                    || produto.getQuantidade() < quantidade) {
+            entityManager.refresh(
+                    produto,
+                    LockModeType.PESSIMISTIC_WRITE
+            );
+            if (produto.getQuantidade() == null || produto.getQuantidade() < quantidade) {
 
-                throw new IllegalStateException(
-                        "Estoque insuficiente: "
-                                + produto.getNome()
-                );
+                throw new IllegalStateException("Estoque insuficiente: " + produto.getNome());
             }
 
 
             // Baixa o estoque.
 
-            produto.setQuantidade(
-                    produto.getQuantidade() - quantidade
-            );
+            produto.setQuantidade(produto.getQuantidade() - quantidade);
 
             itemRepository.save(produto);
 
 
             // Registra a saída associada à comanda.
 
-            Movimentacao movimentacao =
-                    new Movimentacao();
+            Movimentacao movimentacao = new Movimentacao();
 
             movimentacao.setTipo("SAÍDA");
             movimentacao.setQuantidade(quantidade);
@@ -409,9 +414,7 @@ public class ComandaService {
             movimentacao.setFuncionario(funcionario);
             movimentacao.setComanda(comanda);
 
-            movimentacaoRepository.save(
-                    movimentacao
-            );
+            movimentacaoRepository.save(movimentacao);
         }
 
 
@@ -419,12 +422,187 @@ public class ComandaService {
 
         comanda.setStatus("FECHADA");
 
-        comanda.setDataFechamento(
-                LocalDateTime.now()
-        );
+        comanda.setDataFechamento(LocalDateTime.now());
 
         comandaRepository.save(comanda);
     }
+
+    /*
+     * Retorna as comandas FECHADAS, com paginação.
+     *
+     * Cada página contém até 10 registros.
+     */
+    @Transactional(readOnly = true)
+    public Page<Comanda> listarFechadas(int pagina) {
+
+        int paginaValida = Math.max(0, pagina);
+
+        return comandaRepository
+                .findByStatusOrderByDataFechamentoDesc(
+                        "FECHADA",
+                        PageRequest.of(paginaValida, 10)
+                );
+    }
+
+    /*
+     * Calcula os totais de várias comandas
+     * sem executar uma consulta por comanda.
+     *
+     * Exemplo:
+     * Comanda #1 = R$ 25,00
+     * Comanda #2 = R$ 40,00
+     * Comanda #3 = R$ 0,00
+     */
+    @Transactional(readOnly = true)
+    public Map<Integer, BigDecimal> calcularTotaisEmLote(
+            List<Comanda> comandas
+    ) {
+
+        Map<Integer, BigDecimal> totais =
+                new HashMap<>();
+
+        if (comandas.isEmpty()) {
+            return totais;
+        }
+
+        List<Integer> ids = new ArrayList<>();
+
+        // Inicializa todas as comandas com total zero.
+
+        for (Comanda comanda : comandas) {
+
+            ids.add(comanda.getId());
+
+            totais.put(
+                    comanda.getId(),
+                    BigDecimal.ZERO
+            );
+        }
+
+
+        // Uma consulta para localizar os itens.
+
+        List<ComandaItem> linhas =
+                comandaItemRepository.findByComanda_IdIn(
+                        ids
+                );
+
+
+        // Soma os subtotais por comanda.
+
+        for (ComandaItem linha : linhas) {
+
+            Integer idComanda =
+                    linha.getComanda().getId();
+
+            BigDecimal subtotal =
+                    linha.getPrecoUnitario().multiply(
+                            BigDecimal.valueOf(
+                                    linha.getQuantidade()
+                            )
+                    );
+
+            totais.merge(
+                    idComanda,
+                    subtotal,
+                    BigDecimal::add
+            );
+        }
+
+        return totais;
+    }
+
+
+    /*
+     * Pesquisa comandas abertas utilizando
+     * os filtros informados pelo usuário.
+     */
+    @Transactional(readOnly = true)
+    public List<Comanda> buscarAbertas(
+            ComandaFiltroDTO filtro
+    ) {
+
+        if ("FECHADA".equals(filtro.getStatus())) {
+            return List.of();
+        }
+
+        return comandaRepository.findAll(
+
+                ComandaSpecification.filtrar(
+                        filtro,
+                        "ABERTA"
+                ),
+
+                Sort.by(
+                        Sort.Direction.DESC,
+                        "dataAbertura",
+                        "id"
+                )
+        );
+    }
+
+
+    /*
+     * Pesquisa comandas fechadas
+     * combinando Specification e paginação.
+     */
+    @Transactional(readOnly = true)
+    public Page<Comanda> buscarFechadas(ComandaFiltroDTO filtro, int pagina) {
+
+        PageRequest pageable = PageRequest.of(
+
+                Math.max(0, pagina),
+
+                10,
+
+                Sort.by(
+                        Sort.Direction.DESC,
+                        "dataFechamento",
+                        "id"
+                )
+        );
+
+
+        if ("ABERTA".equals(filtro.getStatus())) {
+            return Page.empty(pageable);
+        }
+
+
+        Page<Comanda> resultado =
+                comandaRepository.findAll(
+
+                        ComandaSpecification.filtrar(
+                                filtro,
+                                "FECHADA"
+                        ),
+
+                        pageable
+                );
+
+
+        // Corrige páginas que deixaram de existir.
+
+        if (pagina > 0 && resultado.isEmpty()) {
+
+            int ultimaPagina = Math.max(
+                    0,
+                    resultado.getTotalPages() - 1
+            );
+
+            resultado = comandaRepository.findAll(
+
+                    ComandaSpecification.filtrar(
+                            filtro,
+                            "FECHADA"
+                    ),
+
+                    pageable.withPage(ultimaPagina)
+            );
+        }
+
+        return resultado;
+    }
+
 
 
 

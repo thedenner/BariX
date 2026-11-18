@@ -105,6 +105,13 @@
                     Estoque
                 </a>
 
+                <a class="nav-link rounded px-3 py-2"
+                   href="${pageContext.request.contextPath}/financeiro">
+
+                    Financeiro
+
+                </a>
+
             </nav>
 
 
@@ -366,21 +373,27 @@
 
                 <div class="card-body p-4">
 
-                    <div
-                            class="d-flex justify-content-between align-items-center mb-4"
-                    >
+                    <div class="d-flex flex-wrap gap-2">
 
-                        <h5 class="fw-bold mb-0">
-                            Produtos
-                        </h5>
+                        <a
+                                href="${pageContext.request.contextPath}/estoque/movimentacoes"
+                                class="btn btn-outline-success">
+
+                            Movimentações
+
+                        </a>
+
                         <a
                                 href="${pageContext.request.contextPath}/estoque/novo"
-                                class="btn btn-success"
-                        >
+                                class="btn btn-success">
+
                             Novo produto
+
                         </a>
 
                     </div>
+
+
 
 
 

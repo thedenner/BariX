@@ -256,7 +256,7 @@
 
                 <tr>
                     <td
-                            colspan="${comanda.status eq 'ABERTA' ? 5 : 4}"
+                            colspan="${comanda.status eq 'ABERTA' and not somenteLeitura ? 5 : 4}"
                             class="text-center text-secondary py-4">
 
                         Nenhum produto adicionado.
@@ -299,7 +299,7 @@
 
     <!-- FECHAMENTO DISPONÍVEL SOMENTE PARA ABERTAS -->
 
-    <c:if test="${comanda.status eq 'ABERTA'}">
+    <c:if test="${comanda.status eq 'ABERTA' and not somenteLeitura}">
 
         <form
                 method="post"
