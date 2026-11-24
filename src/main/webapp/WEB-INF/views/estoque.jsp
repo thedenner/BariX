@@ -115,16 +115,11 @@
             </nav>
 
 
-            <div class="mt-5">
-
-                <a
-                        class="nav-link rounded px-3 py-2 text-white"
-                        href="#"
-                >
-                    Sair
-                </a>
-
-            </div>
+            <form class="mt-5" method="post"
+                  action="${pageContext.request.contextPath}/logout">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                <button type="submit" class="btn btn-outline-light w-100">Sair</button>
+            </form>
 
         </aside>
 

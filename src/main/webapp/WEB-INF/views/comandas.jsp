@@ -126,6 +126,13 @@
                 </a>
 
             </nav>
+
+            <form class="mt-5" method="post"
+                  action="${pageContext.request.contextPath}/logout">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                <button type="submit" class="btn btn-outline-light w-100">Sair</button>
+            </form>
+
         </aside>
 
 
